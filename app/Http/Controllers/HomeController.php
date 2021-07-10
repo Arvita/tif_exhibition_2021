@@ -19,6 +19,7 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
+        dd("TES");
         $platforms = Platform::where('active','1')->get();
         // dd($platforms);
         $categories = Category::where('active','1')->orderBy('category','asc')->get();

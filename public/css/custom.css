@@ -1,0 +1,99 @@
+#hero {
+    height: auto;
+    text-align: unset;
+    padding-top: unset;
+}
+
+.sosmed {
+    background: #466393;
+    text-align: center;
+    color: #fff;
+}
+
+#sosmed .container {
+    padding-top: 70px;
+}
+
+.instagram {
+    background: #d6249f;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+    border-radius: 10px;
+}
+
+.page-item.active .page-link {
+    color: #3b4ef8;
+    background-color: #e2e5fe;
+    border-color: #e2e5fe;
+}
+.page-item.active .page-link:hover {
+    background: #3b4ef8;
+    color: #fff;
+}
+
+/*--------------------------------------------------------------
+# products
+--------------------------------------------------------------*/
+.products {
+    background: #f6f7ff;
+    padding-bottom: 80px;
+}
+
+/* .products .section-title h2, .products .section-title p {
+    color: #fff;
+} */
+
+.products .section-title h2::after {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.products .icon-box {
+    padding: 50px 30px;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    transition: all 0.3s;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.products .icon-box:hover {
+    transform: scale(1.02);
+}
+
+.products .icon {
+    margin-bottom: 15px;
+}
+
+.products .icon i {
+    font-size: 32px;
+    line-height: 1;
+    color: #2d405f;
+    background: #eff2f8;
+    padding: 20px;
+    border-radius: 50px;
+    transition: all 0.3s;
+}
+
+.products .title {
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.products .title a {
+    color: #2d405f;
+    transition: 0.3s;
+}
+
+.products .title a:hover {
+    color: #4e6fa4;
+}
+
+.products .description {
+    font-size: 15px;
+    line-height: 28px;
+    margin-bottom: 0;
+}
+.products .icon-box {
+    text-align: unset;
+}

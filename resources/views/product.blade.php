@@ -140,11 +140,11 @@ $prev = Crypt::encrypt((strval(Crypt::decrypt(Request::segment(2))) - 1));
                 @endforeach
             </div>
 
-            <div class="col-lg-12 mt-3">
+            <!-- <div class="col-lg-12 mt-3">
                 <h6 class="font-weight-bold"><i class="icofont-comment"></i> Komentar</h6>
                 <hr>
                 <div id="disqus_thread"></div>
-            </div>
+            </div> -->
         </div>
 
     </div>

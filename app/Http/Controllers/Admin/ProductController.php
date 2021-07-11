@@ -78,7 +78,7 @@ class ProductController extends Controller
                 'semester_class'=> $product->semester.' / '.$product->group_class,
                 'title'=> $product->title,
                 'description'=> Str::limit($product->description, 100),
-                'category'=> $product->category,
+                'category'=> $product->kategori->category,
                 'platform'=> $product->platform,
                 'featured_picture'=> '<img src="'.url(asset('img/products/'.$product->featured_picture)).'" height="30px" alt=" " />',
                 'link_video'=> '<a href="https://youtu.be/'.$product->link_video.'" target="_blank">

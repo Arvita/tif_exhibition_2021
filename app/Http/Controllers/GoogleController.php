@@ -17,7 +17,6 @@ class GoogleController extends Controller
 
     public function callback()
     {
-
         // jika user masih login lempar ke home
         if (Auth::check()) {
             return redirect('/home');
@@ -40,14 +39,18 @@ class GoogleController extends Controller
             Auth::loginUsingId($user->id);
             return redirect('/home');
         } else {
+            
             $newUser = new User();
             $newUser->name = $oauthUser->name;
             $newUser->username = $oauthUser->name;
             $newUser->email = $oauthUser->email;
             $newUser->google_id= $oauthUser->id;
             $newUser->avatar = $oauthUser->avatar;
-            $newUser->role = 1;
-                // password tidak akan digunakan ;)
+            if(stripos(url()->previous(), 'googlevote') !== FALSE){
+                $newUser->role = 2;
+            }else{
+                $newUser->role = 1;
+            }
             $newUser->password = Hash::make($oauthUser->token);
             $newUser->save();
             Auth::login($newUser);

@@ -12,13 +12,21 @@
 */
 
 // Auth::routes();
+
+use Illuminate\Support\Facades\Crypt;
+
 Auth::routes(['register' => false]);
 
 Route::get('/', 'HomeController@index')->name('root');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/product/{id}/{title?}', 'HomeController@product')->name('product');
+Route::get('/loginvote/{kode}', function ($kode) {
+    // $kode = Crypt::decrypt($kode);
+    return view('auth.loginvote',compact('kode'));
+});
 
 Route::middleware(['auth', 'role'])->group(function(){
+    Route::get('/vote/{id}', 'HomeController@vote')->name('vote');
     Route::namespace('Admin')->group(function(){
         Route::get('/admin', 'AdminController@index')->name('admin');
         Route::prefix('admin')->group(function(){
@@ -45,4 +53,6 @@ Route::middleware(['auth', 'role'])->group(function(){
 });
 
 Route::get('google', 'GoogleController@redirect');
-Route::get('google/callback', 'GoogleController@callback');
+Route::get('google/callback/', 'GoogleController@callback');
+Route::get('googlevote/{id}', 'GoogleVoteController@redirect');
+Route::get('googlevote/callback', 'GoogleVoteController@callback');

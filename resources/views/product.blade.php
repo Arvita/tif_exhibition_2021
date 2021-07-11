@@ -1,5 +1,13 @@
 @extends('layouts.main')
 @section('content')
+<?php
+
+use Illuminate\Support\Facades\Crypt;
+
+$next = Crypt::encrypt((strval(Crypt::decrypt(Request::segment(2))) + 1));
+$prev = Crypt::encrypt((strval(Crypt::decrypt(Request::segment(2))) - 1));
+
+?>
 <section id="breadcrumbs" class="breadcrumbs">
     <div class="container d-flex">
         <div class="mr-auto">
@@ -9,8 +17,8 @@
             </ol>
         </div>
         <div class="ml-auto mt-3">
-            <a href="{{ url('product/'.(strval(Request::segment(2)) - 1)) }}" class="text-dark"><i class="icofont-rounded-left p-2 border"></i></a>
-            <a href="{{ url('product/'.(strval(Request::segment(2)) + 1)) }}" class="text-dark"><i class="icofont-rounded-right p-2 border"></i></a>
+            <a href="{{ url('product/'. $prev) }}" class="text-dark"><i class="icofont-rounded-left p-2 border"></i></a>
+            <a href="{{ url('product/'. $next) }}" class="text-dark"><i class="icofont-rounded-right p-2 border"></i></a>
         </div>
     </div>
 </section>
@@ -48,7 +56,7 @@
                 <h3>Informasi Produk</h3>
                 <ul>
                     <li><strong>Platform</strong> : {{ $product->platform }}</li>
-                    <li><strong>Kategori</strong> : {{ $product->category }}</li>
+                    <li><strong>Kategori</strong> : {{ $product->kategori->category }}</li>
                     <li><strong>Nama Kelompok</strong> : {{ $product->group_name }}</li>
                     <li><strong>Ketua</strong> : {{ $product->group_leader }} ({{ $product->group_leader_nim }})</li>
                     <li><strong>Anggota</strong> : {{ $product->group_member }}</li>
@@ -58,23 +66,56 @@
                     <li><a href="{{ 'https://api.whatsapp.com/send?phone='.$product->group_phone }}" class="btn btn-success btn-lg btn-block" target="_blank"><i class="icofont-whatsapp"></i> Hubungi Pengembang</a></li>
                     <li><a href="{{ 'mailto:'.$product->group_email }}" class="btn btn-primary btn-lg btn-block" target="_blank"><i class="icofont-envelope"></i> Email Pengembang</a></li>
                     @if ($product->link_web)
-                        <li><a href="{{ $product->link_web }}" class="btn btn-danger btn-lg btn-block" target="_blank"><i class="icofont-globe"></i> Lihat Website</a></li>
+                    <li><a href="{{ $product->link_web }}" class="btn btn-danger btn-lg btn-block" target="_blank"><i class="icofont-globe"></i> Lihat Website</a></li>
                     @endif
                     @if ($product->link_mobile)
-                        <li><a href="{{ $product->link_mobile }}" class="btn btn-dark btn-lg btn-block" target="_blank"><i class="icofont-brand-android-robot"></i> Download App</a></li>
+                    <li><a href="{{ $product->link_mobile }}" class="btn btn-dark btn-lg btn-block" target="_blank"><i class="icofont-brand-android-robot"></i> Download App</a></li>
                     @endif
                     @if ($product->link_desktop)
-                        <li><a href="{{ $product->link_desktop }}" class="btn btn-secondary btn-lg btn-block" target="_blank"><i class="icofont-brand-windows"></i> Download Desktop App</a></li>
+                    <li><a href="{{ $product->link_desktop }}" class="btn btn-secondary btn-lg btn-block" target="_blank"><i class="icofont-brand-windows"></i> Download Desktop App</a></li>
                     @endif
+                    @if (Auth::check())
+                    @if($vote==null)
+                        <li><a href="{{ url('vote/'.Crypt::encrypt($product->id)) }}" class="btn btn-warning btn-lg btn-block"><i class="icofont-heart text-danger"></i> Vote</a></li>
+                    @else
+                    <li><a class="btn btn-warning btn-lg btn-block" disabled><i class="icofont-heart text-danger"></i>Already Voted</a></li>
+                    @endif
+                    @if (session('success'))
+                    <li><div class="alert alert-success alert-dismissible" id="alert">
+                        <a href="#" class="close text-decoration-none" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ session('success') }}
+                    </div>
+                    </li>
+                    @endif
+                    @else
+                    <li><a href="{{ url('loginvote/'.Crypt::encrypt($product->id)) }}" class="btn btn-warning btn-lg btn-block"><i class="icofont-heart text-danger"></i> Vote</a></li>
+
+                    @endif
+
                 </ul>
-                <h3 class="text-center mt-5">Vote produk ini dengan Like <i class="icofont-heart text-danger"></i></h3>
+                <h3 class="text-center mt-5">
+                @php $rating = round($vote_rating*2)/2; @endphp
+                 @for($x = 5; $x > 0; $x--)
+                    @php 
+                        if($rating > 0.5){
+                            echo '<i class="fas fa-star" style="color:yellow"></i>';
+                        }elseif($rating <= 0 ){
+                            echo '<i class="far fa-star" style="color:yellow"></i>';
+                        }else{
+                            echo '<i class="fas fa-star-half-alt" style="color:yellow"></i>';
+                        }
+                        $rating--;      
+                    @endphp
+                @endfor
+                 ({{ $vote_rating }})
+                </h3>
                 <iframe id="instagram-embed-0" class="instagram-media instagram-media-rendered border" src="{{ $product->link_ig_poster }}embed/captioned/" height="969" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen" data-instgrm-payload-id="instagram-media-payload-0" style="margin-left: 25px;"></iframe>
                 <script async="" src="//www.instagram.com/embed.js"></script>
             </div>
-            
+
             <div class="col-lg-12">
                 <p class="font-weight-bold">
-                    Share : <a href="https://facebook.com/sharer/sharer.php?u={{ Request::url() }}" class="btn btn-primary btn-sm" target="_blank"><i class="icofont-facebook"></i></a> 
+                    Share : <a href="https://facebook.com/sharer/sharer.php?u={{ Request::url() }}" class="btn btn-primary btn-sm" target="_blank"><i class="icofont-facebook"></i></a>
                     <a href="https://twitter.com/share?url={{ Request::url() }}" class="btn btn-info btn-sm" target="_blank"><i class="icofont-twitter"></i></a>
                     <a href="whatsapp://send?text={{ Request::url() }}" class="btn btn-success btn-sm" target="_blank"><i class="icofont-whatsapp"></i></a>
                 </p>
@@ -98,7 +139,7 @@
                 </div>
                 @endforeach
             </div>
-            
+
             <div class="col-lg-12 mt-3">
                 <h6 class="font-weight-bold"><i class="icofont-comment"></i> Komentar</h6>
                 <hr>
@@ -110,11 +151,19 @@
 </section>
 <script>
     /**
-    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-    var disqus_config = function () {
-    this.page.url = "{{ Request::url() }}";  // Replace PAGE_URL with your page's canonical URL variable
-    this.page.identifier = "{{ 'product_'.$id }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    var disqus_config = function() {
+        this.page.url = "{{ Request::url() }}"; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "{{ 'product_'.Crypt::encrypt($id) }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 </script>
 @endsection
+@push('content-css')
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+@endpush
+@push('content-js')
+<script>
+    $("#alert").show().delay(3000).fadeOut();
+</script>
+@endpush

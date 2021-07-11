@@ -42,7 +42,7 @@
     <!-- Template Main CSS File -->
     <link href="{{ url(asset('css/style.css')) }}" rel="stylesheet">
     <link href="{{ url(asset('css/custom.css')) }}" rel="stylesheet">
-
+    @stack('content-css')
     <!-- =======================================================
     * Template Name: Bikin - v2.2.0
     * Template URL: https://bootstrapmade.com/bikin-free-simple-landing-page-template/
@@ -63,15 +63,29 @@
 
             <nav class="nav-menu d-none d-lg-block">
                 <ul>
-                    <li class="active"><a href="{{ url('/') }}">Home</a></li>
-                    {{-- <li class="drop-down"><a href="">Visitor</a>
+                    <!-- <li class="active"><a href="{{ url('/') }}">Home</a></li> -->
+                    <!-- <li class="drop-down"><a href="">Visitor</a>
                         <ul>
                             <li><a href="#">Buku tamu</a></li>
                             <li><a href="#">Visitor Statistik</a></li>
                         </ul>
-                    </li> --}}
+                    </li> -->
                     @guest
                         {{-- No Button  --}}
+                        <!-- <li class="active"><a href="{{ url('/') }}">Home</a></li> -->
+                    @else
+                    @if(Auth::user()->role == 2)
+                    <li class="drop-down"><a href="#">{{ Auth::user()->username }}</a>
+                        <ul>
+                            <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                     @else
                     <li class="drop-down"><a href="#">{{ Auth::user()->username }}</a>
                         <ul>
@@ -86,6 +100,7 @@
                             </li>
                         </ul>
                     </li>
+                    @endif
                     @endguest
                 </ul>
             </nav><!-- .nav-menu -->
@@ -191,6 +206,7 @@
     </script>
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     <script id="dsq-count-scr" src="//tif-exhibition.disqus.com/count.js" async></script> -->
+    @stack('content-js')
 </body>
 </html>
 
